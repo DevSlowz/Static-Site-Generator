@@ -4,7 +4,8 @@ from textnode import (
     text_type_bold,
     text_type_italic,
     text_type_code,
-    text_type_image
+    text_type_image,
+    text_type_link
 )
 
 import re
@@ -121,4 +122,48 @@ def split_nodes_image(old_nodes):
 
 
 def split_nodes_link(old_nodes):
-    pass
+    new_nodes = []
+    
+    for old_node in old_nodes:
+        if old_node.text_type != text_type_text:
+            new_nodes.append(old_node)
+            continue
+
+        original_text = old_node.text
+
+        # Check for links
+        links = extract_markdown_links(original_text)
+
+        # Check to see if no links were found append the current node
+        if len(links) == 0 :
+            new_nodes.append(old_node)
+            continue
+
+        # Iterate through links
+        for link in links:
+            sections = original_text.split(f"[{link[0]}]({link[1]})", 1)
+
+
+            if len(sections) != 2 :
+                raise Exception("Invalid Markdown")
+            
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], text_type_text))
+
+            new_nodes.append(TextNode(
+                link[0], 
+                text_type_link,
+                link[1]
+                ))
+            
+            # Update text so in can split the second portion of text
+            original_text = sections[1]
+                # If there is any text left after processing all images, create a new TextNode with it
+        if original_text != "":
+            new_nodes.append(TextNode(original_text, text_type_text))
+
+    return new_nodes
+
+        
+            
+
