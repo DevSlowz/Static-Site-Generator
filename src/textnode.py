@@ -23,6 +23,15 @@ class TextNode:
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
         
+    """
+        Convert a TextNode to an HTMLNode.
+
+        Args:
+        text_node (TextNode): The TextNode to be converted.
+
+        Returns:
+        HTMLNode: The corresponding HTMLNode representing the text_node.
+    """
     def text_node_to_html_node(text_node):
         # htmlNode (self, tag=None, value=None, children=None, props=None)
         # LeafNode (self, tag, value, props=None)
