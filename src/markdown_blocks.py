@@ -1,5 +1,7 @@
 import re
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import ParentNode, LeafNode
+from inline_markdown import text_to_textnodes
+from textnode import text_node_to_html_node
 
 block_type_paragraph = "paragraph"
 block_type_heading = "heading"
@@ -71,27 +73,64 @@ def paragraph_to_htmlnode(block, type):
     #     block_types.append()
     return f'<p>{block}</p>'
 
-
+def text_to_children(text):
+    text_nodes = text_to_textnodes(text)
+    children = []
+    for text_node in text_nodes:
+        html_node = text_node_to_html_node(text_node)
+        children.append(html_node)
+    return children
 
     
-def heading_to_htmlnode(block, type):
-    heading_level = len(block) - len(block.lstrip('#'))
-    if heading_level > 6 :
-        raise ValueError("Heading level greater than 6")
-    block = block.lstrip('# ')
-    return HTMLNode(f'h{heading_level}', block)
+def heading_to_htmlnode(block):
+    """Converts a Markdown heading block to an HTML node.
 
-def code_to_htmlnode(block, type):
-    child_node = LeafNode('code', block)
-    parent_node = ParentNode('pre', [child_node])
+    Args:
+        block (str): The Markdown heading block.
 
-    return parent_node
+    Returns:
+        ParentNode: An HTML node representing the heading.
+        
+    Raises:
+        ValueError: If the heading level is invalid.
+    """
+    level = 0
+    for char in block:
+        if char == "#":
+            level += 1
+        else:
+            break
+    if level + 1 >= len(block):
+        raise ValueError(f"Invalid heading level: {level}")
+    text = block[level + 1 :]
+    children = text_to_children(text)
+    return ParentNode(f"h{level}", children)
 
-def olist_to_htmlnode(block, type):
+def code_to_htmlnode(block):
+    """Converts a Markdown code block to an HTML node.
+
+    Args:
+        block (str): The Markdown code block.
+
+    Returns:
+        ParentNode: An HTML node representing the code block.
+        
+    Raises:
+        ValueError: If the code block is invalid.
+    """
+    if not block.startswith("```") or not block.endswith("```"):
+        raise ValueError("Invalid code block")
+    text = block[4:-3]
+    children = text_to_children(text)
+    code = ParentNode("code", children)
+    return ParentNode("pre", [code])
+
+def olist_to_htmlnode(block):
+    if not block.startswith("<ol>") or not block.endswith("</ol>"):
+        raise ValueError("Invalid code block") 
+
+def ulist_to_htmlnode(block):
     pass
 
-def ulist_to_htmlnode(block, type):
-    pass
-
-def quote_to_htmlnode(block, type):
+def quote_to_htmlnode(block):
     pass
