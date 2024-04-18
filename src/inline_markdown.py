@@ -164,7 +164,15 @@ def split_nodes_link(old_nodes):
 
     return new_nodes
 
+"""
+    Convert markdown text to a list of TextNode objects representing different types of content.
 
+    Args:
+    text (str): The input markdown text.
+
+    Returns:
+    list: A list of TextNode objects representing the processed content.
+"""
 def text_to_textnodes(text):
     nodes = [TextNode(text, text_type_text)]
     nodes = split_nodes_delimiter(nodes, "**", text_type_bold)
