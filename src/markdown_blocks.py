@@ -126,8 +126,16 @@ def code_to_htmlnode(block):
     return ParentNode("pre", [code])
 
 def olist_to_htmlnode(block):
-    if not block.startswith("<ol>") or not block.endswith("</ol>"):
-        raise ValueError("Invalid code block") 
+    items = block.split('\n')
+    html_items = []
+    # Data should look like ["1. First item", "2. Second item", "3. Third item"]
+    for item in items:
+        text = item[3:]
+        children = text_to_children(text)
+        html_items.append(ParentNode("li", children))
+    return ParentNode("ol", html_items)
+
+
 
 def ulist_to_htmlnode(block):
     pass
