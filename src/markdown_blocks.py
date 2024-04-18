@@ -74,6 +74,7 @@ def paragraph_to_htmlnode(block, type):
     return f'<p>{block}</p>'
 
 def text_to_children(text):
+    # Adding inline styling if any
     text_nodes = text_to_textnodes(text)
     children = []
     for text_node in text_nodes:
@@ -138,7 +139,25 @@ def olist_to_htmlnode(block):
 
 
 def ulist_to_htmlnode(block):
-    pass
+    items = block.split("\n")
+    html_items = []
+
+    for item in items :
+        text = item[2:]
+        children = text_to_children(text)
+        html_items.append(ParentNode("li", children))
+
+    return ParentNode("ul", html_items)
 
 def quote_to_htmlnode(block):
-    pass
+    lines = block.split("\n")
+    new_lines = []
+
+    for line in lines :
+        if not line.startswith(">"):
+            raise ValueError("Invalid quote block")
+        new_lines.append(line.lstrip(">").strip())
+        
+    content = " ".join(new_lines)
+    children = text_to_children(content)
+    return ParentNode("blockquote", children)
