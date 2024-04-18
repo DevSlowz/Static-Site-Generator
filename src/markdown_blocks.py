@@ -1,5 +1,5 @@
 import re
-from htmlnode import ParentNode, LeafNode
+from htmlnode import ParentNode
 from inline_markdown import text_to_textnodes
 from textnode import text_node_to_html_node
 
@@ -62,16 +62,11 @@ def block_to_block_type(block):
     return block_type_paragraph
 
 
-def paragraph_to_htmlnode(block, type):
-    # blocks = markdown_to_blocks(markdown)
-    # block_types = []
-    # if len(blocks) == 0 :
-    #     raise AssertionError("Invalid Markdown")
-    
-    # # Iterate over each block and identify it
-    # for block in blocks:
-    #     block_types.append()
-    return f'<p>{block}</p>'
+def paragraph_to_htmlnode(block):
+    lines = block.split("\n")
+    paragraph = " ".join(lines)
+    children = text_to_children(paragraph)
+    return ParentNode("p", children)
 
 def text_to_children(text):
     # Adding inline styling if any
@@ -82,7 +77,30 @@ def text_to_children(text):
         children.append(html_node)
     return children
 
-    
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    children = []
+    for block in blocks:
+        html_node = block_to_html_node(block)
+        children.append(html_node)
+    return ParentNode("div", children, None)
+
+def block_to_html_node(block):
+    block_type = block_to_block_type(block)
+    if block_type == block_type_paragraph:
+        return paragraph_to_htmlnode(block)
+    if block_type == block_type_heading:
+        return heading_to_htmlnode(block)
+    if block_type == block_type_code:
+        return code_to_htmlnode(block)
+    if block_type == block_type_olist:
+        return olist_to_htmlnode(block)
+    if block_type == block_type_ulist:
+        return ulist_to_htmlnode(block)
+    if block_type == block_type_quote:
+        return quote_to_htmlnode(block)
+    raise ValueError("Invalid block type")
+
 def heading_to_htmlnode(block):
     """Converts a Markdown heading block to an HTML node.
 
@@ -157,7 +175,7 @@ def quote_to_htmlnode(block):
         if not line.startswith(">"):
             raise ValueError("Invalid quote block")
         new_lines.append(line.lstrip(">").strip())
-        
+
     content = " ".join(new_lines)
     children = text_to_children(content)
     return ParentNode("blockquote", children)
