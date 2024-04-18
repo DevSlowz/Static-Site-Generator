@@ -1,4 +1,5 @@
 import re
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 block_type_paragraph = "paragraph"
 block_type_heading = "heading"
@@ -57,3 +58,40 @@ def block_to_block_type(block):
             i += 1
         return block_type_olist
     return block_type_paragraph
+
+
+def paragraph_to_htmlnode(block, type):
+    # blocks = markdown_to_blocks(markdown)
+    # block_types = []
+    # if len(blocks) == 0 :
+    #     raise AssertionError("Invalid Markdown")
+    
+    # # Iterate over each block and identify it
+    # for block in blocks:
+    #     block_types.append()
+    return f'<p>{block}</p>'
+
+
+
+    
+def heading_to_htmlnode(block, type):
+    heading_level = len(block) - len(block.lstrip('#'))
+    if heading_level > 6 :
+        raise ValueError("Heading level greater than 6")
+    block = block.lstrip('# ')
+    return HTMLNode(f'h{heading_level}', block)
+
+def code_to_htmlnode(block, type):
+    child_node = LeafNode('code', block)
+    parent_node = ParentNode('pre', [child_node])
+
+    return parent_node
+
+def olist_to_htmlnode(block, type):
+    pass
+
+def ulist_to_htmlnode(block, type):
+    pass
+
+def quote_to_htmlnode(block, type):
+    pass
