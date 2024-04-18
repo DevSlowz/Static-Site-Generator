@@ -8,6 +8,7 @@ from markdown_blocks import (
     block_type_olist,
     block_type_ulist,
     block_type_quote,
+    code_to_htmlnode
 )
 
 
@@ -71,6 +72,11 @@ This is the same paragraph on a new line
         self.assertEqual(block_to_block_type(block), block_type_olist)
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), block_type_paragraph)
+
+    def test_code_to_htmlnode(self):
+        block = "print('Hello, world!')"
+        expected_html = "<pre><code>print('Hello, world!')</code></pre>"
+        self.assertEqual(code_to_htmlnode(block, 'code').to_html(), expected_html)
 
 
 
