@@ -1,27 +1,25 @@
 import os
-
-# Expand the tilde character to the user's home directory
-directory_path = os.path.expanduser("~/Workspace/Development/github.com/DevSlowz/Static-Site-Generator")
-
-# List the contents of the directory with full paths
-contents_with_paths = [os.path.join(directory_path, item) for item in os.listdir(directory_path)]
-
-# Print the contents with full paths
-# print("Contents of the directory with full paths:")
-# for item_with_path in contents_with_paths:
-#     print(item_with_path)
-
-# For each directory found we need to search throuh it for files and directories 
-# We can try to iterate over each path to see if it is a directoy and if it is we make it 
-# the avtive path and search it  
-
-# For all the file paths found
-for content in contents_with_paths :
-    # If a file path is a directory list is contents
-    if os.path.isdir(content):
-        # List each item found but its complete path
-        contents_with_paths = [os.path.join(content, item) for item in os.listdir(content)]
-        print(contents_with_paths)
-        break
+import shutil
 
 
+
+def copy_files_recursive(source_dir_path, dest_dir_path):
+    # Create the destination directory if it doesn't exist
+    if not os.path.exists(dest_dir_path):
+        os.mkdir(dest_dir_path)
+
+    # Iterate through each item in the source directory
+    for filename in os.listdir(source_dir_path):
+        # Create full paths for source and destination files
+        from_path = os.path.join(source_dir_path, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        
+        # Print the copy operation for each file or directory
+        print(f" * {from_path} -> {dest_path}")
+        
+        # If the item is a file, copy it to the destination
+        if os.path.isfile(from_path):
+            shutil.copy(from_path, dest_path)
+        # If the item is a directory, recursively copy its contents
+        else:
+            copy_files_recursive(from_path, dest_path)
