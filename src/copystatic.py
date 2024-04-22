@@ -1,8 +1,6 @@
 import os
 import shutil
 
-
-
 def copy_files_recursive(source_dir_path, dest_dir_path):
     # Create the destination directory if it doesn't exist
     if not os.path.exists(dest_dir_path):
