@@ -41,3 +41,15 @@ def generate_page(from_path, template_path, dest_path):
         os.makedirs(dest_dir_path, exist_ok=True)
     to_file = open(dest_path, 'w')
     to_file.write(template)
+
+    # crawl every entry in the dir_path_content directory and generate a new .html page for each markdown file it finds.
+    def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+        
+        # Crawl entries in dir_path_content
+        
+
+        # Generate a new .html page for each markdown file
+
+
+
+        # Write to the dest_dir_path using the template_path template
