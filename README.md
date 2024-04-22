@@ -10,3 +10,7 @@
 - "quote"
 - "unordered_list"
 - "ordered_list"
+
+## How to run the program
+1. Visit : https://replit.com/@MatthewVieira/Static-Site-Generator
+2. In the replit shell run '. main.sh' 
